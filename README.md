@@ -26,11 +26,11 @@ A full **Python** web app using **Flask** and **SQLite**. Same features as befor
 ## Deploy on Railway (or similar)
 
 - **nixpacks.toml** and **railway.toml** in the repo tell Railway to run:  
-  `gunicorn -w 1 -b 0.0.0.0:$PORT app:app`  
+  `python -m gunicorn -w 1 -b 0.0.0.0:$PORT app:app`  
   so the app uses a production server (no dev-server warning).
 - If you still see the Flask dev-server warning, set the **Start Command** in Railway yourself:  
   **Project → your service → Settings → Deploy → Start Command** → set to:  
-  `gunicorn -w 1 -b 0.0.0.0:$PORT app:app`  
+  `python -m gunicorn -w 1 -b 0.0.0.0:$PORT app:app`  
   then redeploy.
 - Local runs are unchanged: `python app.py` still uses the dev server on port 5000.
 
@@ -45,7 +45,10 @@ A full **Python** web app using **Flask** and **SQLite**. Same features as befor
 
 ```
 app.py              # Flask app, routes, database
-requirements.txt    # Flask
+requirements.txt    # Flask + gunicorn
+railway.toml        # Railway start command (python -m gunicorn ...)
+nixpacks.toml       # Nixpacks start command
+Procfile            # Same for Heroku-style platforms
 static/
   styles.css        # UI styles
 templates/
@@ -53,5 +56,5 @@ templates/
   signup.html       # Teacher signup
   dashboard.html    # Teacher dashboard
   student.html      # Student dashboard
-school.db           # Created on first run (SQLite)
+school.db           # Created on first run (SQLite, not in git)
 ```
