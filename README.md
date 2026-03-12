@@ -23,6 +23,17 @@ A full **Python** web app using **Flask** and **SQLite**. Same features as befor
 
 4. Open **http://127.0.0.1:5000** in your browser.
 
+## Deploy on Railway (or similar)
+
+- **nixpacks.toml** and **railway.toml** in the repo tell Railway to run:  
+  `gunicorn -w 1 -b 0.0.0.0:$PORT app:app`  
+  so the app uses a production server (no dev-server warning).
+- If you still see the Flask dev-server warning, set the **Start Command** in Railway yourself:  
+  **Project → your service → Settings → Deploy → Start Command** → set to:  
+  `gunicorn -w 1 -b 0.0.0.0:$PORT app:app`  
+  then redeploy.
+- Local runs are unchanged: `python app.py` still uses the dev server on port 5000.
+
 ## Features
 
 - **Login / Signup** – Teacher accounts; student accounts are created by teachers when adding a student (optional email/password).

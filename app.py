@@ -540,8 +540,12 @@ def student_complaint():
 if __name__ == "__main__":
     init_db()
     port = int(os.environ.get("PORT", 5000))
-    # On Railway/Heroku etc., PORT is set and we must bind to 0.0.0.0
-    is_production = "PORT" in os.environ
+    # Production: Railway, Heroku, etc. set PORT or RAILWAY_*; must bind 0.0.0.0 and disable debug
+    is_production = (
+        "PORT" in os.environ
+        or os.environ.get("RAILWAY_ENVIRONMENT_NAME")
+        or os.environ.get("RAILWAY_DEPLOYMENT_ID")
+    )
     host = "0.0.0.0" if is_production else "127.0.0.1"
     debug = not is_production
     print("Mini School Management")
