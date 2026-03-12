@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mini School Management - Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body data-page="login" data-role="teacher">
+    <div class="center-wrap">
+      <div class="panel" role="region" aria-label="Login panel">
+        <div class="panel-header">
+          <div class="brand" style="width:fit-content">
+            <div class="brand-badge" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path class="logo-stroke" d="M4.5 5.5c1.6-1.1 3.6-1.7 5.7-1.7h.3c2.1 0 4.1.6 5.7 1.7M4.5 5.5v13.2c1.6-1.1 3.6-1.7 5.7-1.7h.3c2.1 0 4.1.6 5.7 1.7V5.5" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+                <path class="logo-fill" d="M11.95 5.2h.1c1.7 0 3.3.4 4.8 1.1v10.9c-1.5-.7-3.1-1.1-4.8-1.1h-.1c-1.7 0-3.3.4-4.8 1.1V6.3c1.5-.7 3.1-1.1 4.8-1.1Z" opacity=".12"/>
+              </svg>
+            </div>
+            <div>
+              <h1>Mini School Management</h1>
+              <small>Python / Flask</small>
+            </div>
+          </div>
+          <h2 style="margin-top:14px">Login</h2>
+          <p>Use your email and password. Teachers see the full system; students see their own dashboard.</p>
+        </div>
+        <div class="panel-body">
+          {% if error %}
+          <div class="alert danger">{{ error }}</div>
+          {% endif %}
+          <form action="{{ url_for('login') }}" method="post" autocomplete="on">
+            <label>
+              Email
+              <input name="email" type="email" placeholder="you@example.com" required />
+            </label>
+            <label>
+              Password
+              <input name="password" type="password" placeholder="••••••" required />
+            </label>
+            <div class="row two">
+              <button class="btn primary" type="submit">Login</button>
+              <a class="btn link" href="{{ url_for('signup') }}">Create an account</a>
+            </div>
+            <p class="footer-note">Data is stored in the server database (SQLite).</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
