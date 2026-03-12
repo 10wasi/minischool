@@ -538,23 +538,31 @@ def student_complaint():
 # Main
 # -----------------------------------------------------------------------------
 if __name__ == "__main__":
+    import sys
     init_db()
-    port = int(os.environ.get("PORT", 5000))
-    # Production: Railway, Heroku, etc. set PORT or RAILWAY_*; must bind 0.0.0.0 and disable debug
-    is_production = (
-        "PORT" in os.environ
-        or os.environ.get("RAILWAY_ENVIRONMENT_NAME")
-        or os.environ.get("RAILWAY_DEPLOYMENT_ID")
-    )
-    host = "0.0.0.0" if is_production else "127.0.0.1"
-    debug = not is_production
-    print("Mini School Management")
-    if is_production:
-        print("Production: listening on 0.0.0.0:{}".format(port))
-    else:
+    port = os.environ.get("PORT", "5000")
+    # If gunicorn is installed (Railway, Heroku, etc.), run it instead of Flask dev server
+    try:
+        import gunicorn
+        # Replace this process with gunicorn so Railway runs production server
+        os.execv(
+            sys.executable,
+            [
+                sys.executable, "-m", "gunicorn",
+                "-w", "1",
+                "-b", "0.0.0.0:" + str(port),
+                "app:app",
+            ],
+        )
+    except (ImportError, OSError):
+        # No gunicorn (e.g. local Windows): use Flask dev server
+        port = int(port)
+        host = "0.0.0.0" if os.environ.get("PORT") else "127.0.0.1"
+        debug = not os.environ.get("PORT")
+        print("Mini School Management")
         print("Open in browser: http://{}:{}".format(host, port))
         print("Press CTRL+C to stop.")
-    app.run(host=host, port=port, debug=debug, use_reloader=False)
+        app.run(host=host, port=port, debug=debug, use_reloader=False)
 
 # When app is imported by gunicorn (production), ensure DB exists before first request
 if __name__ != "__main__":
