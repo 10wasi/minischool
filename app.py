@@ -539,11 +539,22 @@ def student_complaint():
 # -----------------------------------------------------------------------------
 if __name__ == "__main__":
     init_db()
-    import sys
-    port = 5000
-    host = "127.0.0.1"
+    port = int(os.environ.get("PORT", 5000))
+    # On Railway/Heroku etc., PORT is set and we must bind to 0.0.0.0
+    is_production = "PORT" in os.environ
+    host = "0.0.0.0" if is_production else "127.0.0.1"
+    debug = not is_production
     print("Mini School Management")
-    print("Open in browser: http://{}:{}".format(host, port))
-    print("Press CTRL+C to stop.")
-    # use_reloader=False avoids process exit issues on Windows
-    app.run(host=host, port=port, debug=True, use_reloader=False)
+    if is_production:
+        print("Production: listening on 0.0.0.0:{}".format(port))
+    else:
+        print("Open in browser: http://{}:{}".format(host, port))
+        print("Press CTRL+C to stop.")
+    app.run(host=host, port=port, debug=debug, use_reloader=False)
+
+# When app is imported by gunicorn (production), ensure DB exists before first request
+if __name__ != "__main__":
+    try:
+        init_db()
+    except Exception:
+        pass
